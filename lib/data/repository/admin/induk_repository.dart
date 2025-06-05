@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:ternak_kenari_app/data/model/request/admin/induk_request_model.dart';
 import 'package:ternak_kenari_app/data/model/response/get_all_induk_response.dart';
