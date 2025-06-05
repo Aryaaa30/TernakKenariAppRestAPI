@@ -1,4 +1,4 @@
-import 'package:ternak_kenari_app/data/model/request/auth/login_request_model.dart';
+part of 'login_bloc.dart';
 
 sealed class LoginEvent {}
 
