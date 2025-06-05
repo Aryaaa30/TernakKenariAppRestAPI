@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ternak_kenari_app/core/core.dart';
 import 'package:ternak_kenari_app/data/model/response/buyer/buyer_profile_response_model.dart';
+import 'package:ternak_kenari_app/presentation/buyer/buyer_home_screen.dart';
 
 class ProfileViewBuyer extends StatelessWidget {
   final Data profile;
