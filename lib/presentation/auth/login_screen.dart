@@ -1,11 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ternak_kenari_app/core/components/buttons.dart';
 import 'package:ternak_kenari_app/core/components/custom_text_field.dart';
 import 'package:ternak_kenari_app/core/constants/colors.dart';
 import 'package:ternak_kenari_app/core/core.dart';
 import 'package:ternak_kenari_app/data/model/request/auth/login_request_model.dart';
 import 'package:ternak_kenari_app/presentation/auth/bloc/login/login_bloc.dart';
+import 'package:ternak_kenari_app/presentation/auth/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
