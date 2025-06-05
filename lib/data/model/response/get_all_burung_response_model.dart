@@ -99,3 +99,34 @@ class GetAllBurung {
     "jenis_kenari": jenisKenariValues.reverse[jenisKenari],
   };
 }
+
+enum JenisKelamin { BETINA, JANTAN }
+
+final jenisKelaminValues = EnumValues({
+  "betina": JenisKelamin.BETINA,
+  "jantan": JenisKelamin.JANTAN,
+});
+
+enum JenisKenari { AF_MEDIUM, LOCAL, YS }
+
+final jenisKenariValues = EnumValues({
+  "AF Medium": JenisKenari.AF_MEDIUM,
+  "Local": JenisKenari.LOCAL,
+  "YS": JenisKenari.YS,
+});
+
+enum Tipe { ANAK, INDUK }
+
+final tipeValues = EnumValues({"anak": Tipe.ANAK, "induk": Tipe.INDUK});
+
+class EnumValues<T> {
+  Map<String, T> map;
+  late Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    reverseMap = map.map((k, v) => MapEntry(v, k));
+    return reverseMap;
+  }
+}
