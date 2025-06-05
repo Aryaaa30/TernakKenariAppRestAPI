@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:ternak_kenari_app/data/model/response/burung_semua_tersedia_model.dart';
 import 'package:ternak_kenari_app/service/service_http_client.dart';
