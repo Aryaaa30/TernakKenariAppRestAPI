@@ -6,11 +6,11 @@ import 'package:ternak_kenari_app/data/model/request/admin/admin_profile_request
 import 'package:ternak_kenari_app/data/model/response/admin_profile_response_model.dart';
 import 'package:ternak_kenari_app/service/service_http_client.dart';
 
-class ProfileAdminRepository {
+class PrifileAdminRepository {
   final ServiceHttpClient _serviceHttpClient;
   final secureStorage = FlutterSecureStorage();
 
-  ProfileAdminRepository(this._serviceHttpClient);
+  PrifileAdminRepository(this._serviceHttpClient);
 
   Future<Either<String, AdminProfileResponseModel>> addProfile(
     AdminProfileRequestModel requestModel,
@@ -45,7 +45,7 @@ class ProfileAdminRepository {
         return Right(profileResponse);
       } else {
         final jsonResponse = json.decode(response.body);
-        log("Get Profile failed: ${jsonResponse['message']}");
+        log("Get Admin Profile failed: ${jsonResponse['message']}");
         return Left(jsonResponse['message'] ?? "Get Profile failed");
       }
     } catch (e) {

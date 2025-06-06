@@ -10,13 +10,14 @@ class IndukRepository {
   IndukRepository(this._serviceHttpClient);
 
   Future<Either<String, GetIndukById>> addInduk(
-    Indukrequestmodel requestModel,
+    IndukRequestModel requestModel,
   ) async {
     try {
       final response = await _serviceHttpClient.postWithToken(
-        'admin/induk',
-        requestModel.toMap(),
+        "admin/induk",
+        requestModel.toJson(),
       );
+
       if (response.statusCode == 201) {
         final jsonResponse = json.decode(response.body);
         final profileResponse = GetIndukById.fromJson(jsonResponse);
@@ -33,6 +34,7 @@ class IndukRepository {
   Future<Either<String, GetAllIndukModel>> getAllInduk() async {
     try {
       final response = await _serviceHttpClient.get("admin/induk");
+
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         final profileResponse = GetAllIndukModel.fromJson(jsonResponse);

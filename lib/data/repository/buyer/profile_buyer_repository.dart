@@ -9,13 +9,14 @@ class ProfileBuyerRepository {
   ProfileBuyerRepository(this._serviceHttpClient);
 
   Future<Either<String, BuyerProfileResponseModel>> addProfileBuyer(
-    Buyerprofilerequestmodel requestModel,
+    BuyerProfileRequestModel requestModel,
   ) async {
     try {
       final response = await _serviceHttpClient.postWithToken(
         "buyer/profile",
-        requestModel.toMap(),
+        requestModel.toJson(),
       );
+
       if (response.statusCode == 201) {
         final jsonResponse = json.decode(response.body);
         final profileResponse = BuyerProfileResponseModel.fromJson(
@@ -24,16 +25,17 @@ class ProfileBuyerRepository {
         return Right(profileResponse);
       } else {
         final errorMessage = json.decode(response.body);
-        return Left(errorMessage['message'] ?? "Unknown error occurred");
+        return Left(errorMessage['message'] ?? 'Unknown error occurred');
       }
     } catch (e) {
-      return Left("Error in adding profile: $e");
+      return Left("An error occurred while adding profile: $e");
     }
   }
 
   Future<Either<String, BuyerProfileResponseModel>> getProfileBuyer() async {
     try {
       final response = await _serviceHttpClient.get("buyer/profile");
+
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         final profileResponse = BuyerProfileResponseModel.fromJson(
@@ -43,10 +45,10 @@ class ProfileBuyerRepository {
         return Right(profileResponse);
       } else {
         final errorMessage = json.decode(response.body);
-        return Left(errorMessage['message'] ?? "Error fetching profile");
+        return Left(errorMessage['message'] ?? 'Unknown error occurred');
       }
     } catch (e) {
-      return Left("Error in fetching profile: $e");
+      return Left("An error occurred while fetching profile: $e");
     }
   }
 }

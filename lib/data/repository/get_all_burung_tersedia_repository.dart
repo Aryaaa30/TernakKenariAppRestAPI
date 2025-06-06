@@ -11,13 +11,14 @@ class GetAllBurungTersediaRepository {
   Future<Either<String, BurungSemuaTersediaModel>>
   getAllBurungTersedia() async {
     try {
-      final response = await httpClient.get("buyer/burung-semua-tersedia");
+      final response = await httpClient.get("burung-semua-tersedia");
+
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        final burungSemuaTersediaResponse = BurungSemuaTersediaModel.fromJson(
+        final burungTersediaResponse = BurungSemuaTersediaModel.fromJson(
           jsonResponse,
         );
-        return Right(burungSemuaTersediaResponse);
+        return Right(burungTersediaResponse);
       } else {
         final errorMessage = json.decode(response.body);
         return Left(errorMessage['message'] ?? 'Unknown error occurred');
