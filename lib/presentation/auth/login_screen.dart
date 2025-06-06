@@ -98,7 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         context,
                       ).showSnackBar(SnackBar(content: Text(state.error)));
                     } else if (state is LoginSuccess) {
-                      final role = state.responseModel.user?.role.toLowerCase();
+                      final role =
+                          state.responseModel.user?.role?.toLowerCase();
 
                       if (role == 'admin') {
                         context.pushAndRemoveUntil(
