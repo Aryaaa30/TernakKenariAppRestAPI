@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ternak_kenari_app/presentation/buyer/profile/bloc/profile_buyer_bloc.dart';
 import 'package:ternak_kenari_app/presentation/buyer/profile/widget/Profile_view_buyer.dart';
+import 'package:ternak_kenari_app/presentation/buyer/profile/widget/profile_buyer_form.dart';
 
 class BuyerProfileScreen extends StatefulWidget {
   const BuyerProfileScreen({super.key});
