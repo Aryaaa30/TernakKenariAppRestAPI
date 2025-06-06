@@ -7,6 +7,7 @@ import 'package:ternak_kenari_app/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:ternak_kenari_app/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:ternak_kenari_app/presentation/bloc_get_all_burung_tersedia/get_burung_tersedia_bloc.dart';
 import 'package:ternak_kenari_app/presentation/buyer/profile/bloc/profile_buyer_bloc.dart';
+import 'package:ternak_kenari_app/presentation/splash/splash_screen.dart';
 import 'package:ternak_kenari_app/service/service_http_client.dart';
 
 void main() {
@@ -43,9 +44,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create:
               (context) => GetBurungTersediaBloc(
-                GetAllBurungTersediaRepository: GetAllBurungTersediaRepository(
-                  ServiceHttpClient(),
-                ),
+                GetAllBurungTersediaRepository(ServiceHttpClient()),
               ),
         ),
       ],
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: const Splashscreen(),
+        home: const SplashScreen(),
       ),
     );
   }

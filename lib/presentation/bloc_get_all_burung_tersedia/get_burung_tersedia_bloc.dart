@@ -10,7 +10,7 @@ class GetBurungTersediaBloc
     extends Bloc<GetBurungTersediaEvent, GetBurungTersediaState> {
   final GetAllBurungTersediaRepository getAllBurungTersediaRepository;
 
-  GetBurungTersediaBloc(this.getAllBurungTersediaRepository, {required GetAllBurungTersediaRepository GetAllBurungTersediaRepository})
+  GetBurungTersediaBloc(this.getAllBurungTersediaRepository)
     : super(GetBurungTersediaInitial()) {
     on<GetAllBurungTersediaEvent>(_getAllBurungTersedia);
   }
