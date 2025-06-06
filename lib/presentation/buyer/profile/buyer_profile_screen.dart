@@ -4,14 +4,14 @@ import 'package:ternak_kenari_app/presentation/buyer/profile/bloc/profile_buyer_
 import 'package:ternak_kenari_app/presentation/buyer/profile/widget/Profile_view_buyer.dart';
 import 'package:ternak_kenari_app/presentation/buyer/profile/widget/profile_buyer_form.dart';
 
-class BuyerProfileScreen extends StatefulWidget {
-  const BuyerProfileScreen({super.key});
+class BuyerProfilePage extends StatefulWidget {
+  const BuyerProfilePage({super.key});
 
   @override
-  State<BuyerProfileScreen> createState() => _BuyerProfileScreenState();
+  State<BuyerProfilePage> createState() => _BuyerProfilePageState();
 }
 
-class _BuyerProfileScreenState extends State<BuyerProfileScreen> {
+class _BuyerProfilePageState extends State<BuyerProfilePage> {
   @override
   initState() {
     super.initState();
@@ -36,13 +36,15 @@ class _BuyerProfileScreenState extends State<BuyerProfileScreen> {
         child: BlocBuilder<ProfileBuyerBloc, ProfileBuyerState>(
           builder: (context, state) {
             if (state is ProfileBuyerLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator());
             }
+
             if (state is ProfileBuyerLoaded &&
                 state.profile.data.name.isNotEmpty) {
               final profile = state.profile.data;
               return ProfileViewBuyer(profile: profile);
             }
+
             // Default ke form jika tidak ada data atau error
             return ProfileBuyerInputForm();
           },

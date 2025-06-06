@@ -73,10 +73,11 @@ class ProfileBuyerInputFormState extends State<ProfileBuyerInputForm> {
                               ? null
                               : () {
                                 if (_formKey.currentState!.validate()) {
-                                  final request = Buyerprofilerequestmodel(
+                                  final request = BuyerProfileRequestModel(
                                     name: nameController.text,
                                     address: addressController.text,
-                                    phoneNumber: phoneController.text,
+                                    phone: phoneController.text,
+                                    photo: "",
                                   );
                                   context.read<ProfileBuyerBloc>().add(
                                     AddProfileBuyerEvent(requestModel: request),

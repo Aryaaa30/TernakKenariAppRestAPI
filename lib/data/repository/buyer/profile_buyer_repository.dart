@@ -12,7 +12,7 @@ class ProfileBuyerRepository {
     BuyerProfileRequestModel requestModel,
   ) async {
     try {
-      final response = await _serviceHttpClient.postWithToken(
+      final response = await _serviceHttpClient.postWihToken(
         "buyer/profile",
         requestModel.toJson(),
       );

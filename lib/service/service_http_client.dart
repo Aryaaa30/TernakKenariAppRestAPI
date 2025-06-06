@@ -3,12 +3,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ServiceHttpClient {
-  final String baseUrl = 'http://10.0.0.2:8000/api/';
+  final String baseUrl = 'http://10.0.2.2:8000/api/';
   final secureStorage = FlutterSecureStorage();
 
-  // POST tanpa token
   Future<http.Response> post(String endPoint, Map<String, dynamic> body) async {
     final url = Uri.parse("$baseUrl$endPoint");
+
     try {
       final response = await http.post(
         url,
@@ -18,37 +18,16 @@ class ServiceHttpClient {
         },
         body: jsonEncode(body),
       );
+
+      _logRequest("POST", url, body, response);
       return response;
     } catch (e) {
       throw Exception("POST request failed: $e");
     }
   }
 
-  Future<http.Response> postWithToken(
-    String endPoint,
-    Map<String, dynamic> body,
-  ) async {
-    final token = await secureStorage.read(key: "token");
-    final url = Uri.parse("$baseUrl$endPoint");
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          if (token != null) 'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(body),
-      );
-      return response;
-    } catch (e) {
-      throw Exception("POST with token request failed: $e");
-    }
-  }
-
-  // GET dengan token
   Future<http.Response> get(String endPoint) async {
-    final token = await secureStorage.read(key: "token");
+    final token = await secureStorage.read(key: "authToken");
     final url = Uri.parse("$baseUrl$endPoint");
     try {
       final response = await http.get(
@@ -59,11 +38,51 @@ class ServiceHttpClient {
           'Content-Type': 'application/json',
         },
       );
+
+      _logRequest("GET", url, null, response);
       return response;
     } catch (e) {
       throw Exception("GET request failed: $e");
     }
   }
 
-  // TODO: Tambahkan method PUT & DELETE jika dibutuhkan nanti
+  Future<http.Response> postWihToken(
+    String endPoint,
+    Map<String, dynamic> body,
+  ) async {
+    final token = await secureStorage.read(key: "authToken");
+    final url = Uri.parse("$baseUrl$endPoint");
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      _logRequest("POST", url, body, response);
+      return response;
+    } catch (e) {
+      throw Exception("POST request failed: $e");
+    }
+  }
+
+  void _logRequest(
+    String method,
+    Uri url,
+    Map<String, dynamic>? body,
+    http.Response response,
+  ) {
+    print("==== HTTP REQUEST ====");
+    print("Method: $method");
+    print("URL: $url");
+    if (body != null) print("Body: ${jsonEncode(body)}");
+    print("Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+    print("======================");
+  }
 }

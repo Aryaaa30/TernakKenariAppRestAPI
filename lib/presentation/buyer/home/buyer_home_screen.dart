@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ternak_kenari_app/core/components/spaces.dart';
+import 'package:ternak_kenari_app/data/model/response/burung_semua_tersedia_model.dart';
 import 'package:ternak_kenari_app/presentation/auth/login_screen.dart';
-import 'package:ternak_kenari_app/presentation/user/user_bloc/user_bloc.dart';
+import 'package:ternak_kenari_app/presentation/bloc_get_all_burung_tersedia/get_burung_tersedia_bloc.dart';
 
 class BuyerHomeScreen extends StatefulWidget {
   const BuyerHomeScreen({super.key});
@@ -14,129 +17,251 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<UserBloc>().add(const GetUserFromPreferences());
+    context.read<GetBurungTersediaBloc>().add(GetAllBurungTersediaEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
+      appBar: AppBar(
+        title: const Text("Home Screen"),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.black),
+            //pakai loading
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CupertinoAlertDialog(
+                    title: const Text("Konfirmasi"),
+                    content: const Text("Apakah Anda yakin ingin keluar?"),
+                    actions: [
+                      CupertinoDialogAction(
+                        child: const Text("Batal"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      CupertinoDialogAction(
+                        child: const Text("Keluar"),
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                            (route) => false,
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // Refresh data burung tersedia
+          context.read<GetBurungTersediaBloc>().add(
+            GetAllBurungTersediaEvent(),
+          );
+        },
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Selamat datang kembali!',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      context.read<UserBloc>().add(const RemoveUser());
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    icon: const Icon(Icons.logout),
-                  ),
-                ],
+            const SpaceHeight(10),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                "Daftar Burung Tersedia",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 20),
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                if (state is UserLoading) {
-                  return const CircularProgressIndicator();
-                }
-
-                if (state is UserLoaded) {
-                  final user = state.user;
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Halo, ${user.name ?? 'User'}!',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Email: ${user.email ?? 'Tidak ada email'}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        Text(
-                          'Role: ${user.role ?? 'Tidak ada role'}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                if (state is UserError) {
-                  return Center(child: Text('Gagal memuat data pengguna'));
-                }
-
-                return const SizedBox(); // Default kosong
-              },
+            const SpaceHeight(10),
+            //search bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Cari burung...",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                ),
+                onChanged: (value) {
+                  // Implement search functionality if needed
+                },
+              ),
             ),
-            const SizedBox(height: 20),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  const Text(
-                    'Rekomendasi Produk',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Kenari Lokal',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: BlocBuilder<
+                  GetBurungTersediaBloc,
+                  GetBurungTersediaState
+                >(
+                  builder: (context, state) {
+                    if (state is GetBurungTersediaLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (state is GetBurungTersediaError) {
+                      return Center(
+                        child: Text("Terjadi kesalahan: ${state.message}"),
+                      );
+                    }
+
+                    if (state is GetBurungTersediaLoaded) {
+                      final List<DataBurungTersedia> burungList =
+                          state.burungTersedia.data;
+
+                      if (burungList.isEmpty) {
+                        return const Center(
+                          child: Text("Tidak ada burung tersedia."),
+                        );
+                      }
+
+                      return GridView.builder(
+                        itemCount: burungList.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, // 2 kolom
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 0.8, // rasio aspek untuk kartu
                             ),
-                          ),
-                          SizedBox(height: 4),
-                          Text('Asal: Blitar'),
-                          Text('Harga: Rp. 200.000'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                        itemBuilder: (context, index) {
+                          final burung = burungList[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  //use ios dialog
+                                  return CupertinoAlertDialog(
+                                    title: Text("Detail Burung"),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("No Ring: ${burung.noRing}"),
+                                        Text("Usia: ${burung.usia}"),
+
+                                        Text(
+                                          "Jenis Kenari: ${burung.jenisKenari}",
+                                        ),
+                                        Text(
+                                          "Jenis Kelamin: ${burung.jenisKelamin}",
+                                        ),
+                                        Text("Harga: Rp${burung.harga}"),
+
+                                        // Tambahkan informasi lain yang diperlukan
+                                        Text(
+                                          "Deskripsi: ${burung.deskripsi.isNotEmpty ? burung.deskripsi : 'Tidak ada deskripsi'}",
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: const Text("Tutup"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Card(
+                              elevation: 4,
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(12),
+                                    ),
+                                    child:
+                                        burung.image.isNotEmpty
+                                            ? Image.network(
+                                              burung.image,
+                                              height: 100,
+                                              width: double.infinity,
+                                              fit: BoxFit.fitHeight,
+                                            )
+                                            : Container(
+                                              height: 100,
+                                              width: double.infinity,
+                                              color: Colors.grey[300],
+                                              child: const Icon(
+                                                Icons.image_not_supported,
+                                              ),
+                                            ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            burung.noRing,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Jenis: ${burung.jenisKenari}",
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            "Kelamin: ${burung.jenisKelamin}",
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+
+                                          Text(
+                                            "Harga: Rp${burung.harga}",
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            "Status: ${burung.status}",
+                                            style: const TextStyle(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+
+                    return const SizedBox(); // default kosong
+                  },
+                ),
               ),
             ),
           ],
