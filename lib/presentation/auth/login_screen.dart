@@ -47,11 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Form(
           key: _key,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 100, 16.0, 0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 170),
+                const SpaceHeight(170),
                 Text(
                   'SELAMAT DATANG KEMBALI',
                   style: TextStyle(
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SpaceHeight(30),
                 CustomTextField(
                   validator: 'Email tidak boleh kosong',
                   controller: emailController,
@@ -69,12 +69,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Icon(Icons.email),
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SpaceHeight(25),
                 CustomTextField(
                   validator: 'Password tidak boleh kosong',
                   controller: passwordController,
                   label: 'Password',
-                  obscureText: isShowPassword,
+                  obscureText: !isShowPassword,
                   prefixIcon: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(Icons.lock),
@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SpaceHeight(30),
                 BlocConsumer<LoginBloc, LoginState>(
                   listener: (context, state) {
                     if (state is LoginFailure) {
@@ -101,7 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     } else if (state is LoginSuccess) {
                       final role =
                           state.responseModel.user?.role?.toLowerCase();
-
                       if (role == 'admin') {
                         context.pushAndRemoveUntil(
                           const AdminConfirmScreen(),
@@ -112,12 +111,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           SnackBar(content: Text(state.responseModel.message!)),
                         );
                         context.pushAndRemoveUntil(
-                          const BuyerProfileScreen(),
+                          const BuyerProfilePage(),
                           (route) => false,
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Role tidak dikenal')),
+                          const SnackBar(content: Text('Role tidak dikenali')),
                         );
                       }
                     }
@@ -129,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ? null
                               : () {
                                 if (_key.currentState!.validate()) {
-                                  final request = Loginrequestmodel(
+                                  final request = LoginRequestModel(
                                     email: emailController.text,
                                     password: passwordController.text,
                                   );
@@ -142,7 +141,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+
+                const SpaceHeight(20),
                 Text.rich(
                   TextSpan(
                     text: 'Belum memiliki akun? Silahkan ',

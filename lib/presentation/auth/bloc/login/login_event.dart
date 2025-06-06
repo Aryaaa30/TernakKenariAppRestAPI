@@ -3,7 +3,7 @@ part of 'login_bloc.dart';
 sealed class LoginEvent {}
 
 class LoginRequested extends LoginEvent {
-  final Loginrequestmodel requestModel;
+  final LoginRequestModel requestModel;
 
   LoginRequested({required this.requestModel});
 }

@@ -36,7 +36,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    namaController.dispose();
     _key.currentState?.dispose();
     super.dispose();
   }
@@ -52,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 100),
+                const SpaceHeight(100),
                 Text(
                   'DAFTAR AKUN BARU',
                   style: TextStyle(
@@ -60,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SpaceHeight(30),
                 CustomTextField(
                   validator: 'Username tidak boleh kosong',
                   controller: namaController,
@@ -70,7 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Icon(Icons.person),
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SpaceHeight(25),
                 CustomTextField(
                   validator: 'Email tidak boleh kosong',
                   controller: emailController,
@@ -80,15 +79,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Icon(Icons.email),
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SpaceHeight(25),
                 Row(
+                  spacing: 10,
                   children: [
                     Expanded(
                       child: CustomTextField(
                         validator: 'Password tidak boleh kosong',
                         controller: passwordController,
                         label: 'Password',
-                        obscureText: isShowPassword,
+                        obscureText: !isShowPassword,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Icon(Icons.lock),
@@ -110,7 +110,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SpaceHeight(50),
                 BlocConsumer<RegisterBloc, RegisterState>(
                   listener: (context, state) {
                     if (state is RegisterSuccess) {
@@ -140,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ? null
                               : () {
                                 if (_key.currentState!.validate()) {
-                                  final request = Registerrequestmodel(
+                                  final request = RegisterRequestModel(
                                     username: namaController.text,
                                     email: emailController.text,
                                     password: passwordController.text,
@@ -154,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+                const SpaceHeight(20),
                 Text.rich(
                   TextSpan(
                     text: 'Sudah memiliki akun? Silahkan ',
